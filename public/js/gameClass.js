@@ -8,8 +8,8 @@ function Player(id){
   this.colors = ['#FF0000','#FFFF00','#FF00FF','#00FF00','#00FFFF','#0000FF'];
   this.states = ['circle','square'];
   
-  this.x = CANVAS_WIDTH/2;
-  this.y = CANVAS_HEIGHT/2;
+  this.x = CANVAS_WIDTH/(Math.random()*5);
+  this.y = CANVAS_HEIGHT/(Math.random()*5);
   this.width = 100;
   this.height = 100;
   this.color = this.colors[Math.floor(Math.random()*this.colors.length)];
@@ -29,7 +29,7 @@ function Player(id){
     }
 
     canvas.restore();
-  }
+  };
 
   this.update = function(){
     //Stay within Bounds
@@ -44,5 +44,5 @@ function Player(id){
     }else if(this.y > CANVAS_HEIGHT-this.height){
       this.y = CANVAS_HEIGHT-this.height;
     }
-  }
+  };
 }
