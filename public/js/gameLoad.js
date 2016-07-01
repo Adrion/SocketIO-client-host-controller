@@ -2,7 +2,7 @@ var baseURL = "localhost";
 
 var CANVAS_WIDTH = window.innerWidth-100;
 var CANVAS_HEIGHT = window.innerHeight-100;
-var FPS = 30
+var FPS = 30;
         
 //Start game loop and stuff
 var canvasElement = $("<canvas id='mainCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "'></canvas>");

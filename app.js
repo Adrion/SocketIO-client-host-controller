@@ -82,7 +82,7 @@
         //Search through all the rooms and remove the socket which matches our disconnected id
         if(rooms[socket.socketName].roomSocket.id == socket.id){
           delete rooms[socket.socketName];
-          console.log('room : '+ socket.socketName + 'disconnected');
+          console.log('room : '+ socket.socketName + ' disconnected');
         }
       }
       //Lost socket is a mobile connections

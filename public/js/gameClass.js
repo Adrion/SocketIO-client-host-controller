@@ -29,7 +29,7 @@ function Player(id){
     }
 
     canvas.restore();
-  };
+  }
 
   this.update = function(){
     //Stay within Bounds
@@ -44,5 +44,5 @@ function Player(id){
     }else if(this.y > CANVAS_HEIGHT-this.height){
       this.y = CANVAS_HEIGHT-this.height;
     }
-  };
+  }
 }
