@@ -32,29 +32,25 @@
         rooms[data.room].mobileSockets.push(socket);
 
         //Store the position of our room that this mobile device belongs to
-        socket.roomId = data.room;
+        socket.roomName = data.room;
 
         //Return the callback as true
         fn({registered: true});
 
         //Access the room that this socket belongs to, and emit directly to the index.html
         // to 'add user' with the socketId as a unique indentifier.
-        rooms[socket.roomi].roomSocket.emit('add user', socket.id, data);
+        rooms[socket.roomName].roomSocket.emit('add user', socket.id, data);
       } else {
         //Callback returns false with an error
         fn({registered: false, error: "No live desktop connection found"});
       }
     });
 
-    socket.on("connect desktop", function(){
-      console.log('update desktop', players.length);
-      socket.broadcast.emit('update desktop', players);
-    });
-
     socket.on("update players", function(playersArray){
       console.log('update players', playersArray.length);
       players = playersArray;
       socket.broadcast.emit('update players', players);
+
     });
 
     //Update the position
@@ -73,11 +69,11 @@
     socket.on("disconnect", function(){
 
       //The lost socket is a room
-      if(typeof socket.roomId == 'undefined'){
-
+      if(typeof socket.roomName == 'undefined'){
         //Search through all the rooms and remove the socket which matches our disconnected id
         if(rooms[socket.socketName].roomSocket.id == socket.id){
           delete rooms[socket.socketName];
+          console.log('room : '+ socket.socketName + 'disconnected');
         }
       }
       //Lost socket is a mobile connections
@@ -85,22 +81,23 @@
         var destroyThis = null;
 
         //Sort through the mobile sockets for that particular room, and remove accordingly
-        var roomId = socket.roomId;
+        var roomName = socket.roomName;
 
         //Check if room still exist
-        if(rooms[roomId] !== undefined){
+        if(rooms[roomName] !== undefined){
 
-          for(var i in rooms[roomId].mobileSockets){
-            if(rooms[roomId].mobileSockets[i] == socket){
+          for(var i in rooms[roomName].mobileSockets){
+            if(rooms[roomName].mobileSockets[i] == socket){
               destroyThis = i;
             }
           }
 
           if(destroyThis !== null){
-            rooms[roomId].mobileSockets.splice(destroyThis, 1);
+            rooms[roomName].mobileSockets.splice(destroyThis, 1);
 
             //alert the room that this user was a member of
-            rooms[roomId].roomSocket.emit('remove user', socket.id);
+            rooms[roomName].roomSocket.emit('remove user', socket.id);
+            console.log('User : '+ socket.id + 'disconnected from : ' + roomName);
           }
         }
 
