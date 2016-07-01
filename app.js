@@ -24,7 +24,6 @@
       //TODO must be unique
       socket.socketName = data.room;
       rooms[data.room] = new Room(socket, data.room);
-      // rooms.push(new Room(socket, data.room));
     });
 
     socket.on("connect mobile", function(data, fn) {
@@ -47,6 +46,9 @@
     });
 
     socket.on("update players", function(playersArray){
+      if(rooms[socket.socketName] === undefined)
+        return;
+
       console.log('update players', playersArray.length);
       players = playersArray;
       socket.broadcast.emit('update players', players);
@@ -55,12 +57,18 @@
 
     //Update the position
     socket.on("update movement", function(data){
+      if(rooms[socket.roomName] === undefined)
+        return;
+
       console.log('update position for ' +  socket.id);
       socket.broadcast.emit('update position', socket.id, data);
     });
 
     //Update the state
     socket.on('update touch', function(touchevent){
+      if(rooms[socket.roomName] === undefined)
+        return;
+
       console.log('update state to ' + touchevent + ' for ' +  socket.id);
       socket.broadcast.emit('update state', socket.id, touchevent);
     });
@@ -70,6 +78,7 @@
 
       //The lost socket is a room
       if(typeof socket.roomName == 'undefined'){
+        if(rooms[socket.socketName] === undefined) return;
         //Search through all the rooms and remove the socket which matches our disconnected id
         if(rooms[socket.socketName].roomSocket.id == socket.id){
           delete rooms[socket.socketName];
