@@ -29,7 +29,6 @@
   $('#gameLink').attr("href", roomURL).text(roomURL);
 
   //When a a new main device is connected
-  //socket.emit('connect desktop');
 
   socket.on('update desktop', function(playersArray){
       console.log('update desktop', playersArray);
@@ -52,10 +51,6 @@
       }
       if(destroyThis !== null){ players.splice(destroyThis, 1);}
       sync();
-
-      if(players.length === 0) {
-        socket.disconnect();
-      }
   });
 
   socket.on('update state', function(socketId, touchevent){
