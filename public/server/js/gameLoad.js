@@ -10,13 +10,5 @@ var canvas = canvasElement.get(0).getContext("2d");
 canvasElement.appendTo('#wrapper');
        
 setInterval(function() {
-  update();
   draw();
 }, 1000/FPS);
-        
-//Queue Functions
-function Push(arrayName,arrayElement){    arrayName.push(arrayElement);   }
-function Pop(arrayName){                  arrayName.shift();              }
-
-//Universals
-var players = [];

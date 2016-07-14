@@ -1,0 +1,17 @@
+html
+   head
+      meta(charset="UTF-8")
+      title server View
+      link(rel="stylesheet", type="text/css", href="/server/css/style.css")
+
+   body
+      p Navigate to #[a#gameLink(href='href="http://localhost:3000/') ERROR] with your mobile phone.
+      p#status
+      div#wrapper
+
+      script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js')
+      script(src='/server/js/gameLoad.js')
+      script(src='/socket.io/socket.io.js')
+      script(type='text/javascript').
+         var room = !{JSON.stringify(room) || "undefined"};
+      script(src='/server/js/gameInit.js')

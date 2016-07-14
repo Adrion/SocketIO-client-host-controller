@@ -1,0 +1,25 @@
+html
+   head
+      meta(charset="UTF-8")
+      meta(name="msapplication-tap-highlight", content="no")
+      title Client Page
+      link(rel="stylesheet", type="text/css", href="/client/css/style.css")
+
+   body
+      div#wrapper
+         h1#join
+         div#touchpad
+         p orientation: #[span.orientation]
+         p geolocation: #[span.geolocation]
+         p battery: #[span.battery]
+         p devicelight: #[span.devicelight]
+         p lightLevel: #[span.lightLevel]
+         p deviceproximity: #[span.deviceproximity]
+         p userproximity: #[span.userproximity]
+         p
+         p#error
+
+      script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js')
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.4/hammer.min.js')
+      script(src='/socket.io/socket.io.js')
+      script(src='/client/js/gameClient.js')
