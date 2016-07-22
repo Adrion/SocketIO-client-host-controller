@@ -9,8 +9,13 @@
   app.set('port', (process.env.PORT || 3000));
 
   app.get('/', function(req, res) {
-    res.render("host");
+    res.render("index");
   });
+
+  app.get('/host/', function(req, res) {
+    res.render('host');
+  });
+
   app.get('/host/:room', function(req, res) {
     res.render('host', {room: req.params.room});
   });

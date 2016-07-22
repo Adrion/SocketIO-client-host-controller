@@ -10,7 +10,7 @@ function getUrlVars() {
 (function(){
 
     //When a user connects with a mobile phone
-    socket.emit('connect mobile', { room: getUrlVars()["id"]}, function(data){
+    socket.emit('connect mobile', { room: roomId}, function(data){
         if(data.registered = true){
             registered = true;
         }else{

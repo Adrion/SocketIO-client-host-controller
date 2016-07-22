@@ -1,6 +1,3 @@
-var socket = io.connect(baseURL);
-var roomId;
-
 //TODO real config file
 var baseURL = "https://adrion-remote-socket.herokuapp.com";
 var CANVAS_WIDTH = 1024;
@@ -16,6 +13,8 @@ setInterval(function() {
     draw();
 }, 1000/FPS);
 
+var socket = io.connect(baseURL);
+var roomId;
 
 //When a a new main device is connected
 var players = {};

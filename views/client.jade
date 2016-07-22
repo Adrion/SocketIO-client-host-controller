@@ -22,6 +22,9 @@ html
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js')
       script(src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.4/hammer.min.js')
       script(src='/socket.io/socket.io.js')
+      script(type='text/javascript').
+         var roomId = !{JSON.stringify(room) || "undefined"};
+
       script(src='/client/js/gameClient.js')
 
       // Controls

@@ -1,0 +1,20 @@
+html
+   head
+      meta(charset="UTF-8")
+      title server View
+      link(rel="stylesheet", type="text/css", href="/host/css/style.css")
+
+   body
+      h1 Welcome to remote socket test server
+      h3
+         a(href="./host/") Create a room
+
+      h3 Join Room :
+         input(type="text" placeholder="roomname" name="room" id="roomInput")
+
+      p
+         a(onclick="window.location.href =" +
+         " './host/' + document.getElementById('roomInput').value;" href="#") as Host
+      p
+         a(onclick="window.location.href =" +
+         " './client/' + document.getElementById('roomInput').value;" href="#") as Player
