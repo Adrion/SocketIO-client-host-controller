@@ -1,5 +1,5 @@
 {
-  "name": "SocketIO - mobile-controller",
+  "name": "SocketIO-mobile-controller",
   "version": "1.0.0",
   "description": "Node.js server that uses socket.io to maintain a connection between a desktop (or other instance) client, and multiple mobile controllers.",
   "main": "app.js",
