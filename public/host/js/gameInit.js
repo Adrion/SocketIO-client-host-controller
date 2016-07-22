@@ -12,7 +12,7 @@ setInterval(function() {
     draw();
 }, 1000/FPS);
 
-var socket = io.connect('localhost');
+var socket = io.connect();
 var roomId;
 
 //When a a new main device is connected
