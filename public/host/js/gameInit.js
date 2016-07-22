@@ -1,6 +1,22 @@
 var socket = io.connect(baseURL);
 var roomId;
 
+//TODO real config file
+var baseURL = "https://adrion-remote-socket.herokuapp.com";
+var CANVAS_WIDTH = window.innerWidth-100;
+var CANVAS_HEIGHT = window.innerHeight-100;
+var FPS = 30;
+
+//Start game loop and stuff
+var canvasElement = $("<canvas id='mainCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "'></canvas>");
+var canvas = canvasElement.get(0).getContext("2d");
+canvasElement.appendTo('#wrapper');
+
+setInterval(function() {
+    draw();
+}, 1000/FPS);
+
+
 //When a a new main device is connected
 var players = {};
 
@@ -26,7 +42,7 @@ if(typeof roomId !== 'undefined'){
     requestRoomCreation(roomId);
 }
 
-var roomURL = baseURL+":3000/client/1?id=" + roomId;
+var roomURL = baseURL+"/client/1?id=" + roomId;
 $('#gameLink').attr("href", roomURL).text(roomURL);
 
 socket.on('new user', function(player){
@@ -85,6 +101,7 @@ function drawPlayer(player) {
 function requestRoomCreation(roomId) {
     console.log(roomId);
     socket.emit('new room', { room: roomId, height: CANVAS_HEIGHT, width: CANVAS_WIDTH});
+    //TODO change urladress
 }
 
 //TODO Real databinding
