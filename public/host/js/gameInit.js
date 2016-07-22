@@ -4,7 +4,7 @@ var roomId;
 //TODO real config file
 var baseURL = "https://adrion-remote-socket.herokuapp.com";
 var CANVAS_WIDTH = 1024;
-var CANVAS_HEIGHT = 500;
+var CANVAS_HEIGHT = 400;
 var FPS = 30;
 
 //Start game loop and stuff
