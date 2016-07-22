@@ -1,5 +1,4 @@
 //TODO real config file
-var baseURL = "https://adrion-remote-socket.herokuapp.com";
 var CANVAS_WIDTH = 1024;
 var CANVAS_HEIGHT = 400;
 var FPS = 30;
@@ -13,7 +12,7 @@ setInterval(function() {
     draw();
 }, 1000/FPS);
 
-var socket = io.connect(baseURL);
+var socket = io.connect('localhost');
 var roomId;
 
 //When a a new main device is connected
@@ -40,8 +39,8 @@ if(typeof roomId !== 'undefined'){
     requestRoomCreation(roomId);
 }
 
-var roomURL = baseURL+"/client/1?id=" + roomId;
-$('#gameLink').attr("href", roomURL).text(roomURL);
+var roomURL = "/client/1?id=" + roomId;
+$('#gameLink').attr("href", roomURL).text("join room " + roomId);
 
 socket.on('new user', function(player){
     console.log('New Player: ' + player.id);
