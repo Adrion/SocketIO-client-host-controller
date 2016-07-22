@@ -1,4 +1,4 @@
-var socket = io.connect('https://adrion-remote-socket');
+var socket = io.connect('https://adrion-remote-socket.herokuapp.com');
 
 function getUrlVars() {
     var vars = {};
