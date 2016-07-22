@@ -78,8 +78,8 @@ function updatePlayer(player) {
 
 function updateCanvasSize() {
     var $canvas = $('#mainCanvas');
-    $canvas.height = CANVAS_HEIGHT;
-    $canvas.width = CANVAS_WIDTH;
+    $canvas.height(CANVAS_HEIGHT);
+    $canvas.width(CANVAS_WIDTH);
 }
 
 function drawPlayer(player) {
