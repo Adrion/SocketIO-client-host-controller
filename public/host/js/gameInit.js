@@ -3,8 +3,8 @@ var roomId;
 
 //TODO real config file
 var baseURL = "https://adrion-remote-socket.herokuapp.com";
-var CANVAS_WIDTH = window.innerWidth-100;
-var CANVAS_HEIGHT = window.innerHeight-100;
+var CANVAS_WIDTH = 1024;
+var CANVAS_HEIGHT = 500;
 var FPS = 30;
 
 //Start game loop and stuff
@@ -34,7 +34,6 @@ if(typeof roomId !== 'undefined'){
         CANVAS_WIDTH = data.width;
         players = data.players;
         manualPlayerListUpdate();
-        updateCanvasSize();
     });
 } else {
     //TODO request a room Name
@@ -74,12 +73,6 @@ function updatePlayer(player) {
     if(players[player.id]){
         players[player.id] = player;
     }
-}
-
-function updateCanvasSize() {
-    var $canvas = $('#mainCanvas');
-    $canvas.height(CANVAS_HEIGHT);
-    $canvas.width(CANVAS_WIDTH);
 }
 
 function drawPlayer(player) {
