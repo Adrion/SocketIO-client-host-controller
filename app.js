@@ -21,8 +21,8 @@
   app.use(express.static('public'));
   server.listen(3000);
 
-  var Player = require(__dirname + '/public/server/js/class/Player.js');
-  var Room = require(__dirname + '/public/server/js/class/Room.js');
+  var Player = require(__dirname + '/class/Player.js');
+  var Room = require(__dirname + '/class/Room.js');
 
   //A Hash to store the existing rooms
   var rooms = {};
