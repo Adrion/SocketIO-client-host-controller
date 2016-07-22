@@ -68,7 +68,7 @@
         // to 'add user' with the socketId as a unique indentifier.
         console.log('New Player: ' + socket.id);
         var player = new Player(socket.id);
-        room.players.push(player);
+        room.players[player.id] = player;
 
         //Return the callback as true
         fn({registered: true, playerList: room.players});
@@ -80,37 +80,20 @@
       }
     });
 
-    socket.on("update players", function(playersArray){
-      if(rooms[socket.socketName] === undefined)
-        return;
-      var room = rooms[socket.socketName];
-
-      console.log('update players', playersArray.length);
-      room.players = playersArray;
-      socket.broadcast.to(socket.socketName).emit('update players', room.players);
-
-    });
-
     //Update the position
     socket.on("update movement", function(data){
       if(rooms[socket.roomName] === undefined)
         return;
 
       var room = rooms[socket.roomName];
-      var player = null;
+      var player;
 
-      for(var i in room.players){
-        if(room.players[i].id == socket.id){
-          player = room.players[i];
-        }
-      }
-
-      if(player !== null){
+      if(player = room.players[socket.id]){
         player.move(data.tilt_LR, data.tilt_FB);
-      }
 
-      console.log('update position for ' +  socket.id);
-      socket.broadcast.to(socket.roomName).emit('update player', player);
+        console.log('update position for ' +  socket.id);
+        socket.broadcast.to(socket.roomName).emit('update player', player);
+      }
     });
 
     //Update the state
@@ -119,21 +102,14 @@
         return;
 
       var room = rooms[socket.roomName];
-      var player = null;
+      var player;
 
       console.log('update state to ' + touchevent + ' for ' +  socket.id);
 
-      for(var i in room.players){
-        if(room.players[i].id == socket.id){
-          player = room.players[i];
-        }
+      if(player = room.players[socket.id]){
+        player.changeColor();
+        socket.broadcast.to(socket.roomName).emit('update player', player);
       }
-
-      if(player !== null){
-        player.color = player.colors[Math.floor(Math.random()*player.colors.length)];
-      }
-
-      socket.broadcast.to(socket.roomName).emit('update player', player);
     });
 
     //When a user disconnects
@@ -170,24 +146,18 @@
         if(rooms[roomName] !== undefined){
           var room = rooms[roomName];
 
-          for(var i in rooms[roomName].mobileSockets){
-            if(rooms[roomName].mobileSockets[i] == socket){
+          for(var i in room.mobileSockets){
+            if(room.mobileSockets[i] == socket){
               destroyThis = i;
             }
           }
 
           if(destroyThis !== null){
-            rooms[roomName].mobileSockets.splice(destroyThis, 1);
+            room.mobileSockets.splice(destroyThis, 1);
 
-            var destroyPlayer = null;
-            for(var j in room.players){
-              if(room.players[j].id == socket.id){
-                destroyPlayer = j;
-              }
-            }
-            if(destroyPlayer !== null){
-              socket.broadcast.to(roomName).emit('user removed', room.players[destroyPlayer]);
-              room.players.splice(destroyPlayer, 1);
+            if(room.players[socket.id]){
+              socket.broadcast.to(roomName).emit('user removed', room.players[socket.id]);
+              delete room.players[socket.id];
               console.log('User : '+ socket.id + 'disconnected from : ' + roomName);
             }
           }

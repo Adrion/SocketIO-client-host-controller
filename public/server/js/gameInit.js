@@ -2,8 +2,7 @@ var socket = io.connect(baseURL+":3000");
 var roomId;
 
 //When a a new main device is connected
-//TODO Players as collection
-var players = [];
+var players = {};
 
 roomId = room;
 if(typeof roomId !== 'undefined'){
@@ -18,7 +17,6 @@ if(typeof roomId !== 'undefined'){
         CANVAS_HEIGHT = data.height;
         CANVAS_WIDTH = data.width;
         players = data.players;
-        updatePlayers();
         manualPlayerListUpdate();
         updateCanvasSize();
     });
@@ -31,31 +29,17 @@ if(typeof roomId !== 'undefined'){
 var roomURL = baseURL+":3000/client/1?id=" + roomId;
 $('#gameLink').attr("href", roomURL).text(roomURL);
 
-
-socket.on('update desktop', function(playersArray){
-    console.log('update desktop', playersArray);
-    players = playersArray;
-});
-
 socket.on('new user', function(player){
-    console.log(player);
-    $('#status').text((players.length + 1) + ' players');
     console.log('New Player: ' + player.id);
-    players.push(player);
+    players[player.id] = player;
     manualPlayerListUpdate();
 });
 
 socket.on('user removed', function(player){
-    var destroyThis = null;
-    for(var i in players){
-        if(players[i].id == player.id){
-            destroyThis = i;
-        }
+    if(players[player.id]){
+        console.log(player.id);
+        delete players[player.id];
     }
-    console.log(player.id);
-    console.log(players[destroyThis].id);
-
-    if(destroyThis !== null){ players.splice(destroyThis, 1);}
 });
 
 socket.on('update player', function(player){
@@ -65,20 +49,15 @@ socket.on('update player', function(player){
 function draw() {
     canvas.clearRect(0,0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    for(var i in players){
-        drawPlayer(players[i]);
+    for(var key in players){
+        drawPlayer(players[key]);
     }
 }
 
 function updatePlayer(player) {
-    for(var i in players){
-        if(players[i].id == player.id){
-            players[i] = player;
-        }
+    if(players[player.id]){
+        players[player.id] = player;
     }
-}
-function updatePlayers() {
-    players.forEach(updatePlayer);
 }
 
 function updateCanvasSize() {
@@ -110,5 +89,5 @@ function requestRoomCreation(roomId) {
 
 //TODO Real databinding
 function manualPlayerListUpdate() {
-    $('#status').text((players.length) + ' players');
+    $('#status').text((Object.keys(players).length) + ' players');
 }

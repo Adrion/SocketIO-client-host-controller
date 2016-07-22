@@ -4,8 +4,8 @@ CANVAS_HEIGHT = 400;
 
 function Player(id){
   this.id            = id;
-  this.smoothingLR   = new Array();
-  this.smoothingFB   = new Array();
+  this.smoothingLR   = [];
+  this.smoothingFB   = [];
   this.smoothedLR    = 0;
   this.smoothedFB    = 0;
 
@@ -73,5 +73,10 @@ Player.prototype.move = function(tiltLR, tiltFB){
 
   this.update();
 };
+
+Player.prototype.changeColor = function(){
+  this.color = this.colors[Math.floor(Math.random()*this.colors.length)];
+};
+
 
 module.exports = Player;
