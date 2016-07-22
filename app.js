@@ -6,6 +6,7 @@
   var jade = require('jade');
 
   app.set('view engine', 'jade');
+  app.set('port', (process.env.PORT || 3000));
 
   app.get('/', function(req, res) {
     res.render("host");
@@ -19,7 +20,7 @@
   });
 
   app.use(express.static('public'));
-  server.listen(3000);
+  server.listen(app.get('port'));
 
   var Player = require(__dirname + '/class/Player.js');
   var Room = require(__dirname + '/class/Room.js');
