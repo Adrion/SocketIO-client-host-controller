@@ -1,5 +1,5 @@
 //TODO Dynamic
-CANVAS_WIDTH = 400;
+CANVAS_WIDTH = 1024;
 CANVAS_HEIGHT = 400;
 
 function Player(id){
