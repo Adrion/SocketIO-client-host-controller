@@ -39,7 +39,7 @@ if(typeof roomId !== 'undefined'){
     requestRoomCreation(roomId);
 }
 
-var roomURL = "/client/1?id=" + roomId;
+var roomURL = "/client/" + roomId;
 $('#gameLink').attr("href", roomURL).text("join room " + roomId);
 
 socket.on('new user', function(player){
