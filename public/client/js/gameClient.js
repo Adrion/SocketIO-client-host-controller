@@ -1,4 +1,4 @@
-var socket = io.connect('http://192.168.133.70:3000');
+var socket = io.connect('https://adrion-remote-socket');
 
 function getUrlVars() {
     var vars = {};

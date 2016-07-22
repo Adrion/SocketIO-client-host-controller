@@ -1,4 +1,4 @@
-var socket = io.connect(baseURL+":3000");
+var socket = io.connect(baseURL);
 var roomId;
 
 //When a a new main device is connected

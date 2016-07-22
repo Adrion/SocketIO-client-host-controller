@@ -1,4 +1,4 @@
-var baseURL = "localhost";
+var baseURL = "https://adrion-remote-socket.herokuapp.com";
 
 var CANVAS_WIDTH = window.innerWidth-100;
 var CANVAS_HEIGHT = window.innerHeight-100;
