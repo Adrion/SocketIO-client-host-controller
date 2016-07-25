@@ -91,9 +91,10 @@ function drawPlayer(player) {
 }
 
 function requestRoomCreation(roomId) {
-    console.log(roomId);
+    console.log("Request room creation " + roomId);
     socket.emit('new room', { room: roomId, height: CANVAS_HEIGHT, width: CANVAS_WIDTH});
-    //TODO change urladress
+    var obj = { Page: "Room " + roomId, Url: "/host/" + roomId };
+    history.pushState(obj, obj.Page, obj.Url);
 }
 
 //TODO Real databinding
