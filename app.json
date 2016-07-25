@@ -1,0 +1,7 @@
+{
+  "name": "SocketIO-mobile-controller",
+  "description": "Node.js server that uses socket.io to maintain a connection between a desktop (or other instance) client, and multiple mobile controllers.",
+  "repository": "https://github.com/Adrion/SocketIO-mobile-controller",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["node", "express", "socket.io"]
+}
