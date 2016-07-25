@@ -52,6 +52,7 @@ socket.on('user removed', function(player){
     if(players[player.id]){
         console.log(player.id);
         delete players[player.id];
+        manualPlayerListUpdate();
     }
 });
 
