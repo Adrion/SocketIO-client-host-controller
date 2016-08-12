@@ -9,13 +9,19 @@ function getUrlVars() {
 }
 (function(){
 
-    //When a user connects with a mobile phone
+    // When a user connects with a mobile phone
     socket.emit('connect mobile', { room: roomId}, function(data){
         if(data.registered = true){
             registered = true;
         }else{
             $('#error').append(data.error);
         }
+    });
+
+    // Handle room destruction
+    socket.on('disconnect', function() {
+        alert('Lost connection with room. You are now disconnected.');
+        //TODO redirect ./home
     });
 
     // Prevent device sleep mode

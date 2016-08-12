@@ -47,7 +47,6 @@
       socket.join(data.room);
     });
 
-    //TODO connect Host
     socket.on('connect host', function(data, fn) {
       //check if room exist
       if(rooms[data.room] !== undefined) {
@@ -126,7 +125,6 @@
 
     //When a user disconnects
     socket.on('disconnect', function(){
-      socket.leaveAll();
       var room;
 
       //The lost socket is a room
@@ -134,6 +132,7 @@
         if(typeof rooms[socket.socketName] == 'undefined') return;
 
         room = rooms[socket.socketName];
+        //TODO Change to Hash (prevent async index changes)
         //Search through all the rooms and remove the socket which matches our disconnected id
         room.roomSockets.forEach(function(element, index){
           if(element.id == socket.id){
@@ -142,9 +141,12 @@
             console.log(room.roomSockets.length);
 
             if(room.roomSockets.length === 0){
-              //TODO notice connected users
+              room.mobileSockets.forEach(function(clientSocket){
+                clientSocket.disconnect();
+              });
+              socket.leaveAll();
               delete rooms[socket.socketName];
-              mainLogger.log('Room : '+ socket.socketName + ' DESTROYED');
+              mainLogger.log('Room : ' + socket.socketName + ' DESTROYED');
             }
           }
         });
@@ -160,6 +162,7 @@
         if(rooms[roomName] !== undefined) {
           room = rooms[roomName];
 
+          //TODO Change to Hash (prevent async index changes)
           for(var i in room.mobileSockets){
             if(room.mobileSockets[i] == socket){
               destroyThis = i;
@@ -172,7 +175,7 @@
             if(room.players[socket.id]){
               socket.broadcast.to(roomName).emit('user removed', room.players[socket.id]);
               delete room.players[socket.id];
-              room.logger.log('User : '+ socket.id + 'disconnected from : ' + roomName);
+              room.logger.log('User : ' + socket.id + ' disconnected from : ' + roomName);
             }
           }
         }
