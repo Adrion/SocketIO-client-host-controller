@@ -52,7 +52,7 @@
       if(rooms[data.room] !== undefined) {
         var room = rooms[data.room];
         socket.socketName = data.room;
-        room.roomSockets.push(socket);
+        room.roomSockets[socket.id] = socket;
         room.logger.log('New Host ' + socket.id + ' join Room ' + data.room);
         socket.join(data.room);
 
@@ -68,7 +68,7 @@
       if(rooms[data.room] !== undefined) {
         var room = rooms[data.room];
 
-        room.mobileSockets.push(socket);
+        room.mobileSockets[socket.id] = socket;
         socket.join(data.room);
 
         //Store the position of our room that this mobile device belongs to
@@ -128,33 +128,28 @@
       var room;
 
       //The lost socket is a room
-      if(typeof socket.roomName == 'undefined'){
+      if(typeof socket.roomName == 'undefined') {
         if(typeof rooms[socket.socketName] == 'undefined') return;
 
         room = rooms[socket.socketName];
-        //TODO Change to Hash (prevent async index changes)
-        //Search through all the rooms and remove the socket which matches our disconnected id
-        room.roomSockets.forEach(function(element, index){
-          if(element.id == socket.id){
-            room.roomSockets.splice(index, 1);
-            room.logger.log('Host : '+ socket.id + ' disconnected');
-            console.log(room.roomSockets.length);
 
-            if(room.roomSockets.length === 0){
-              room.mobileSockets.forEach(function(clientSocket){
-                clientSocket.disconnect();
-              });
-              socket.leaveAll();
-              delete rooms[socket.socketName];
-              mainLogger.log('Room : ' + socket.socketName + ' DESTROYED');
+        if(room.roomSockets[socket.id]) {
+          delete room.roomSockets[socket.id];
+
+          room.logger.log('Host : '+ socket.id + ' disconnected');
+
+          if(Object.keys(room.roomSockets).length === 0) {
+            for (var i in room.mobileSockets) {
+              room.mobileSockets[i].disconnect();
             }
+            socket.leaveAll();
+            delete rooms[socket.socketName];
+            mainLogger.log('Room : ' + socket.socketName + ' DESTROYED');
           }
-        });
+        }
       }
       //Lost socket is a mobile connections
       else {
-        var destroyThis = null;
-
         //Sort through the mobile sockets for that particular room, and remove accordingly
         var roomName = socket.roomName;
 
@@ -162,15 +157,8 @@
         if(rooms[roomName] !== undefined) {
           room = rooms[roomName];
 
-          //TODO Change to Hash (prevent async index changes)
-          for(var i in room.mobileSockets){
-            if(room.mobileSockets[i] == socket){
-              destroyThis = i;
-            }
-          }
-
-          if(destroyThis !== null){
-            room.mobileSockets.splice(destroyThis, 1);
+          if(room.mobileSockets[socket.id]) {
+            delete room.mobileSockets[socket.id];
 
             if(room.players[socket.id]){
               socket.broadcast.to(roomName).emit('user removed', room.players[socket.id]);
