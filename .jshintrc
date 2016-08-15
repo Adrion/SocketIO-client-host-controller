@@ -1,0 +1,26 @@
+{
+  "node": true,
+  "browser": true,
+  "bitwise": false,
+  "curly": true,
+  "eqeqeq": true,
+  "forin": true,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true,
+  "strict": true,
+  "expr": true,
+  "globals": {
+    "jQuery": true,
+    "io": true,
+    "socket": true,
+    "Hammer": true,
+    "$": true,
+    "roomId": true
+  },
+  "devel": {
+    "console": false
+  }
+}

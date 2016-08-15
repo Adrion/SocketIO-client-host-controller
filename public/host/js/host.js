@@ -1,103 +1,107 @@
-//TODO real config file
+'use strict';
+
+// TODO real config file
 var CANVAS_WIDTH = 1024;
 var CANVAS_HEIGHT = 400;
 var FPS = 30;
 
-//Start game loop and stuff
-var canvasElement = $("<canvas id='mainCanvas' width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "'></canvas>");
-var canvas = canvasElement.get(0).getContext("2d");
+// Start game loop and stuff
+var canvasElement = $('<canvas id=\'mainCanvas\' width=\'' +
+CANVAS_WIDTH + '\' height=\'' + CANVAS_HEIGHT + '\'></canvas>');
+
+var canvas = canvasElement.get(0).getContext('2d');
 canvasElement.appendTo('#wrapper');
 
 setInterval(function() {
-    draw();
-}, 1000/FPS);
+  draw();
+}, 1000 / FPS);
 
 var socket = io.connect();
-var roomId;
 
-//When a a new main device is connected
+// When a a new main device is connected
 var players = {};
 
-roomId = room;
-if(typeof roomId !== 'undefined'){
-    socket.emit('connect host', { room: roomId }, function(data){
-        //Create room if not exist.
-        console.log(data);
-        if(data.error){
-            console.log(data.error);
-            requestRoomCreation(roomId);
-            return;
-        }
-        CANVAS_HEIGHT = data.height;
-        CANVAS_WIDTH = data.width;
-        players = data.players;
-        manualPlayerListUpdate();
-    });
+if (typeof roomId !== 'undefined') {
+  socket.emit('connect host', { room: roomId }, function(data) {
+    // Create room if not exist.
+    console.log(data);
+    if (data.error) {
+      console.log(data.error);
+      requestRoomCreation(roomId);
+      return;
+    }
+    CANVAS_HEIGHT = data.height;
+    CANVAS_WIDTH = data.width;
+    players = data.players;
+    manualPlayerListUpdate();
+  });
 } else {
-    //TODO request a room Name
-    roomId = Math.round(Math.random() * 100);
-    requestRoomCreation(roomId);
+  // TODO request a room Name
+  roomId = Math.round(Math.random() * 100);
+  requestRoomCreation(roomId);
 }
 
-var roomURL = "/client/" + roomId;
-$('#gameLink').attr("href", roomURL).text("join room " + roomId);
+var roomURL = '/client/' + roomId;
+$('#gameLink').attr('href', roomURL).text('join room ' + roomId);
 
-socket.on('new user', function(player){
-    console.log('New Player: ' + player.id);
-    players[player.id] = player;
+socket.on('new user', function(player) {
+  console.log('New Player: ' + player.id);
+  players[player.id] = player;
+  manualPlayerListUpdate();
+});
+
+socket.on('user removed', function(player) {
+  if (players[player.id]) {
+    console.log(player.id);
+    delete players[player.id];
     manualPlayerListUpdate();
+  }
 });
 
-socket.on('user removed', function(player){
-    if(players[player.id]){
-        console.log(player.id);
-        delete players[player.id];
-        manualPlayerListUpdate();
-    }
-});
-
-socket.on('update player', function(player){
-    updatePlayer(player);
+socket.on('update player', function(player) {
+  updatePlayer(player);
 });
 
 function draw() {
-    canvas.clearRect(0,0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    for(var key in players){
-        drawPlayer(players[key]);
+  canvas.clearRect(0,0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  for (var key in players) {
+    if (players.hasOwnProperty(key)) {
+      drawPlayer(players[key]);
     }
+  }
 }
 
 function updatePlayer(player) {
-    if(players[player.id]){
-        players[player.id] = player;
-    }
+  if (players[player.id]) {
+    players[player.id] = player;
+  }
 }
 
 function drawPlayer(player) {
-    canvas.save();
+  canvas.save();
 
-    if(this.state='square'){
-        canvas.fillStyle=player.color;
-        canvas.fillRect(player.x,player.y,player.width,player.height);
-    } else {
-        canvas.beginPath();
-        canvas.arc(player.x, player.y, player.width, 0, 2 * Math.PI, false);
-        canvas.fillStyle = player.color;
-        canvas.fill();
-    }
+  if (player.state === 'square') {
+    canvas.fillStyle = player.color;
+    canvas.fillRect(player.x,player.y,player.width,player.height);
+  } else {
+    canvas.beginPath();
+    canvas.arc(player.x, player.y, player.width, 0, 2 * Math.PI, false);
+    canvas.fillStyle = player.color;
+    canvas.fill();
+  }
 
-    canvas.restore();
+  canvas.restore();
 }
 
 function requestRoomCreation(roomId) {
-    console.log("Request room creation " + roomId);
-    socket.emit('new room', { room: roomId, height: CANVAS_HEIGHT, width: CANVAS_WIDTH});
-    var obj = { Page: "Room " + roomId, Url: "/host/" + roomId };
-    history.pushState(obj, obj.Page, obj.Url);
+  console.log('Request room creation ' + roomId);
+  socket.emit('new room',
+      { room: roomId, height: CANVAS_HEIGHT, width: CANVAS_WIDTH});
+  var obj = { Page: 'Room ' + roomId, Url: '/host/' + roomId };
+  history.pushState(obj, obj.Page, obj.Url);
 }
 
-//TODO Real databinding
+// TODO Real databinding
 function manualPlayerListUpdate() {
-    $('#status').text((Object.keys(players).length) + ' players');
+  $('#status').text((Object.keys(players).length) + ' players');
 }

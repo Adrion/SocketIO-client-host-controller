@@ -1,15 +1,16 @@
+'use strict';
+
 (function() {
   var express = require('express');
   var app = express();
   var server = require('http').Server(app);
   var io = require('socket.io')(server);
-  var jade = require('jade');
 
   app.set('view engine', 'jade');
   app.set('port', (process.env.PORT || 3000));
 
   app.get('/', function(req, res) {
-    res.render("index");
+    res.render('index');
   });
 
   app.get('/host/', function(req, res) {
@@ -31,139 +32,149 @@
   var Player = require(__dirname + '/class/Player.js');
   var Room = require(__dirname + '/class/Room.js');
 
-  //A Hash to store the existing rooms
+  // A Hash to store the existing rooms
   var rooms = {};
   var mainLogger = new Logger('server');
 
-  io.on('connection', function (socket) {
-    console.log('Socket connection started');
+  io.on('connection', function(socket) {
+    mainLogger.log(socket.conn.remoteAddress + ' is connected');
 
     socket.on('new room', function(data) {
-      //TODO must be unique
-      mainLogger.log('new room : ' + data.room);
+      // TODO must be unique
       socket.socketName = data.room;
       rooms[data.room] = new Room(socket, data);
-      rooms[data.room].logger = new Logger(data.room);
+      rooms[data.room].logger = new Logger('room-' + data.room);
       socket.join(data.room);
+      mainLogger.log('new room : ' + data.room);
     });
 
     socket.on('connect host', function(data, fn) {
-      //check if room exist
-      if(rooms[data.room] !== undefined) {
+      // Check if room exist
+      if (rooms[data.room] !== undefined) {
         var room = rooms[data.room];
         socket.socketName = data.room;
         room.roomSockets[socket.id] = socket;
         room.logger.log('New Host ' + socket.id + ' join Room ' + data.room);
         socket.join(data.room);
 
-        fn({height: room.CANVAS_HEIGHT, width: room.CANVAS_WIDTH, players: room.players});
+        fn({
+          height: room.CANVAS_HEIGHT,
+          width: room.CANVAS_WIDTH,
+          players: room.players,
+        });
       } else {
 
-        fn({error: 'Room didn\'t exist and was created'})
+        fn({error: 'Room didn\'t exist and was created'});
       }
     });
 
     socket.on('connect mobile', function(data, fn) {
 
-      if(rooms[data.room] !== undefined) {
+      if (rooms[data.room] !== undefined) {
         var room = rooms[data.room];
 
         room.mobileSockets[socket.id] = socket;
         socket.join(data.room);
 
-        //Store the position of our room that this mobile device belongs to
+        // Store the position of our room that this mobile device belongs to
         socket.roomName = data.room;
 
-        //Access the room that this socket belongs to, and emit directly to the index.html
-        // to 'add user' with the socketId as a unique indentifier.
         room.logger.log('New Player ' + socket.id + ' join Room ' + data.room);
 
         var player = new Player(socket.id);
         room.players[player.id] = player;
 
-        //Return the callback as true
+        // Return the callback as true with player list
         fn({registered: true, playerList: room.players});
 
         socket.broadcast.to(data.room).emit('new user', player);
       } else {
-        //Callback returns false with an error
+        // Callback returns false with an error
         fn({registered: false, error: 'No live desktop connection found'});
       }
     });
 
-    //Update the position
-    socket.on('update movement', function(data){
-      if(rooms[socket.roomName] === undefined)
+    // Update the position
+    socket.on('update movement', function(data) {
+      if (rooms[socket.roomName] === undefined) {
         return;
+      }
 
       var room = rooms[socket.roomName];
-      var player;
+      var player = room.players[socket.id];
 
-      if(player = room.players[socket.id]){
-        player.move(data.tilt_LR, data.tilt_FB);
+      if (player) {
+        player.move(data.tiltLR, data.tiltFB);
 
         console.log('update position for ' +  socket.id);
         socket.broadcast.to(socket.roomName).emit('update player', player);
       }
     });
 
-    //Update the state
-    socket.on('update touch', function(touchevent){
-      if(rooms[socket.roomName] === undefined)
+    // Update the state
+    socket.on('update touch', function(touchevent) {
+      if (rooms[socket.roomName] === undefined) {
         return;
+      }
 
       var room = rooms[socket.roomName];
       var player;
 
       console.log('update state to ' + touchevent + ' for ' +  socket.id);
-
-      if(player = room.players[socket.id]){
+      player = room.players[socket.id];
+      if (player) {
         player.changeColor();
         socket.broadcast.to(socket.roomName).emit('update player', player);
       }
     });
 
-    //When a user disconnects
-    socket.on('disconnect', function(){
+    // When a user disconnects
+    socket.on('disconnect', function() {
       var room;
 
-      //The lost socket is a room
-      if(typeof socket.roomName == 'undefined') {
-        if(typeof rooms[socket.socketName] == 'undefined') return;
+      // The lost socket is a room
+      if (typeof socket.roomName === 'undefined') {
+        if (typeof rooms[socket.socketName] === 'undefined') {
+          return;
+        }
 
         room = rooms[socket.socketName];
 
-        if(room.roomSockets[socket.id]) {
+        if (room.roomSockets[socket.id]) {
           delete room.roomSockets[socket.id];
 
-          room.logger.log('Host : '+ socket.id + ' disconnected');
+          room.logger.log('Host : ' + socket.id + ' disconnected');
 
-          if(Object.keys(room.roomSockets).length === 0) {
+          if (Object.keys(room.roomSockets).length === 0) {
             for (var i in room.mobileSockets) {
-              room.mobileSockets[i].disconnect();
+              if (room.mobileSockets.hasOwnProperty(i)) {
+                room.mobileSockets[i].disconnect();
+              }
             }
             socket.leaveAll();
-            delete rooms[socket.socketName];
+            room.logger.log('Room : ' + socket.socketName + ' DESTROYED');
             mainLogger.log('Room : ' + socket.socketName + ' DESTROYED');
+            delete rooms[socket.socketName];
           }
         }
       }
-      //Lost socket is a mobile connections
+      // Lost socket is a mobile connections
       else {
-        //Sort through the mobile sockets for that particular room, and remove accordingly
         var roomName = socket.roomName;
 
-        //Check if room still exist
-        if(rooms[roomName] !== undefined) {
+        // Check if room still exist
+        if (rooms[roomName] !== undefined) {
           room = rooms[roomName];
 
-          if(room.mobileSockets[socket.id]) {
+          if (room.mobileSockets[socket.id]) {
             delete room.mobileSockets[socket.id];
 
-            if(room.players[socket.id]){
-              socket.broadcast.to(roomName).emit('user removed', room.players[socket.id]);
+            if (room.players[socket.id]) {
+              socket.broadcast.to(roomName).emit('user removed',
+                  room.players[socket.id]);
               delete room.players[socket.id];
-              room.logger.log('User : ' + socket.id + ' disconnected from : ' + roomName);
+              room.logger.log('User : ' + socket.id +
+              ' disconnected from : ' + roomName);
             }
           }
         }
