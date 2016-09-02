@@ -6,6 +6,7 @@
   var server = require('http').Server(app);
   var io = require('socket.io')(server);
 
+  app.set('view options',{layout:false});
   app.set('view engine', 'jade');
   app.set('port', (process.env.PORT || 3000));
 
@@ -18,11 +19,11 @@
   });
 
   app.get('/host/:room', function(req, res) {
-    res.render('host', {room: req.params.room});
+    res.render('host/host-home', {room: req.params.room});
   });
 
   app.get('/client/:room', function(req, res) {
-    res.render('client', {room: req.params.room});
+    res.render('client/client-home', {room: req.params.room});
   });
 
   app.use(express.static('public'));
@@ -58,8 +59,6 @@
         socket.join(data.room);
 
         fn({
-          height: room.CANVAS_HEIGHT,
-          width: room.CANVAS_WIDTH,
           players: room.players,
         });
       } else {
@@ -72,6 +71,10 @@
 
       if (rooms[data.room] !== undefined) {
         var room = rooms[data.room];
+
+        if (room.started) {
+          return fn({registered: false, error: 'Game already started'});
+        }
 
         room.mobileSockets[socket.id] = socket;
         socket.join(data.room);
@@ -94,38 +97,38 @@
       }
     });
 
-    // Update the position
-    socket.on('update movement', function(data) {
+    socket.on('update ready state', function(data, fn) {
       if (rooms[socket.roomName] === undefined) {
         return;
       }
 
       var room = rooms[socket.roomName];
       var player = room.players[socket.id];
-
-      if (player) {
-        player.move(data.tiltLR, data.tiltFB);
-
-        console.log('update position for ' +  socket.id);
-        socket.broadcast.to(socket.roomName).emit('update player', player);
-      }
+      player.ready = data.ready;
+      console.log(player);
+      socket.broadcast.to(socket.roomName).emit('user ready', player);
+      fn();
     });
 
-    // Update the state
-    socket.on('update touch', function(touchevent) {
+    socket.on('request start', function(fn) {
+      if (rooms[socket.socketName] === undefined) {
+        return;
+      }
+      var room = rooms[socket.socketName];
+      room.started = true;
+      socket.broadcast.to(socket.socketName).emit('game start');
+      fn();
+    });
+
+    socket.on('player increase', function() {
       if (rooms[socket.roomName] === undefined) {
         return;
       }
 
       var room = rooms[socket.roomName];
-      var player;
-
-      console.log('update state to ' + touchevent + ' for ' +  socket.id);
-      player = room.players[socket.id];
-      if (player) {
-        player.changeColor();
-        socket.broadcast.to(socket.roomName).emit('update player', player);
-      }
+      var player = room.players[socket.id];
+      player.increase();
+      socket.broadcast.to(socket.roomName).emit('update player', player);
     });
 
     // When a user disconnects
