@@ -15,7 +15,7 @@
   });
 
   app.get('/host/', function(req, res) {
-    res.render('host');
+    res.render('host/host-home');
   });
 
   app.get('/host/:room', function(req, res) {
