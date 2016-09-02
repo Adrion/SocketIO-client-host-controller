@@ -1,9 +1,5 @@
 'use strict';
 
-// TODO Dynamic
-var CANVAS_WIDTH = 1024;
-var CANVAS_HEIGHT = 400;
-
 function Player(id) {
   this.id = id;
   this.ready = false;

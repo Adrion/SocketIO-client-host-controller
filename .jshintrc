@@ -9,7 +9,7 @@
   "noempty": true,
   "nonew": true,
   "undef": true,
-  "unused": true,
+  "unused": false,
   "strict": true,
   "expr": true,
   "globals": {

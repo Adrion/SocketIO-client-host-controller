@@ -43,7 +43,7 @@ if (typeof roomId !== 'undefined') {
     players = data.players;
     isStarted = data.isStarted;
     manualPlayerListUpdate();
-    if(isStarted) {
+    if (isStarted) {
       start();
     }
   });
@@ -91,7 +91,6 @@ function manualPlayerListUpdate() {
       $('#start').prop('disabled', false);
       $('#start').html('Start');
     } else {
-      // disable btn
       $('#start').prop('disabled', true);
       $('#start').html('Waiting for players');
     }

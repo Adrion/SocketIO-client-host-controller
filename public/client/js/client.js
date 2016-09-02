@@ -4,16 +4,12 @@ var socket = io.connect();
 var ready = false;
 function toggleReady() {
   ready = !ready;
-  console.log(ready);
-  // emit updateReadyState
   socket.emit('update ready state', { ready: ready}, function() {
-    // update btn style
     if (ready) {
-      $('#ready').html('Ready !')
+      $('#ready').html('Ready !');
     } else {
-      $('#ready').html('Ready ?')
+      $('#ready').html('Ready ?');
     }
-    console.log("test");
   });
 }
 
@@ -34,7 +30,7 @@ socket.on('disconnect', function() {
 
 socket.on('game start', function() {
   $('#ready').hide();
-  $('#touchpad').html("CLICK");
+  $('#touchpad').text('CLICK');
   $('#touchpad').click(function() {
     socket.emit('player increase');
   });

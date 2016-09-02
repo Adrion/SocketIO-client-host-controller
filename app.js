@@ -6,7 +6,7 @@
   var server = require('http').Server(app);
   var io = require('socket.io')(server);
 
-  app.set('view options',{layout:false});
+  app.set('view options',{layout: false});
   app.set('view engine', 'jade');
   app.set('port', (process.env.PORT || 3000));
 
