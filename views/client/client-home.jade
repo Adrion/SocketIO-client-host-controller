@@ -9,14 +9,9 @@ html
       div#wrapper
          h1#join
          div#touchpad
-         p orientation: #[span.orientation]
-         p geolocation: #[span.geolocation]
-         p battery: #[span.battery]
-         p devicelight: #[span.devicelight]
-         p lightLevel: #[span.lightLevel]
-         p deviceproximity: #[span.deviceproximity]
-         p userproximity: #[span.userproximity]
-         p
+         button#ready(onclick='toggleReady()') Ready ?
+         h2 Score
+         p#score
          p#error
 
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js')
@@ -26,12 +21,3 @@ html
          var roomId = !{JSON.stringify(room) || "undefined"};
 
       script(src='/client/js/client.js')
-
-      // Controls
-      script(src='/client/js/controls/battery.js')
-      script(src='/client/js/controls/deviceProximity.js')
-      script(src='/client/js/controls/geolocation.js')
-      script(src='/client/js/controls/lightDevice.js')
-      script(src='/client/js/controls/lightLevel.js')
-      script(src='/client/js/controls/orientation.js')
-      script(src='/client/js/controls/userProximity.js')

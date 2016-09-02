@@ -10,9 +10,8 @@ function Room(roomSocket, roomInfos) {
   this.mobileSockets = {};
   // A Collection of all Players objects
   this.players = {};
-  this.CANVAS_HEIGHT = roomInfos.height;
-  this.CANVAS_WIDTH = roomInfos.width;
   this.logger = {};
+  this.started = false;
 }
 
 module.exports = Room;
