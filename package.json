@@ -1,7 +1,7 @@
 {
   "name": "SocketIO-client-host-controller",
   "version": "1.0.0",
-  "description": "Node.js multiplayer server engine - Client / Host",
+  "description": "Node.js multiplayer server boilerplate - Client / Host",
   "main": "app.js",
   "dependencies": {
     "express": "~4.13.1",

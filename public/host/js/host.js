@@ -26,7 +26,6 @@ socket.on('update player', function(player) {
 });
 
 
-
 // When a a new main device is connected
 var players = {};
 var isStarted = false;

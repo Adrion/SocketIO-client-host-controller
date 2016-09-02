@@ -120,17 +120,6 @@
       fn();
     });
 
-    socket.on('player increase', function() {
-      if (rooms[socket.roomName] === undefined) {
-        return;
-      }
-
-      var room = rooms[socket.roomName];
-      var player = room.players[socket.id];
-      player.increase();
-      socket.broadcast.to(socket.roomName).emit('update player', player);
-    });
-
     // When a user disconnects
     socket.on('disconnect', function() {
       var room;
@@ -182,6 +171,19 @@
           }
         }
       }
+    });
+
+
+    // Custom Events for your Game
+    socket.on('player increase', function() {
+      if (rooms[socket.roomName] === undefined) {
+        return;
+      }
+
+      var room = rooms[socket.roomName];
+      var player = room.players[socket.id];
+      player.increase();
+      socket.broadcast.to(socket.roomName).emit('update player', player);
     });
 
   });

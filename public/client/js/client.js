@@ -30,7 +30,6 @@ socket.on('disconnect', function() {
 
 socket.on('game start', function() {
   $('#ready').hide();
-  $('#touchpad').text('CLICK');
   $('#touchpad').click(function() {
     socket.emit('player increase');
   });
