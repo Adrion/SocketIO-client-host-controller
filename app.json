@@ -1,5 +1,5 @@
 {
-  "name": "SocketIO-client-host-controller",
+  "name": "SocketIO-controller",
   "description": "Node.js multiplayer server boilerplate - Client / Host",
   "repository": "https://github.com/Adrion/SocketIO-client-host-controller",
   "logo": "https://node-js-sample.herokuapp.com/node.png",
