@@ -1,4 +1,4 @@
-# SocketIO - mobile controller
+# SocketIO - client - host - controller
 
 Node.js multiplayer server boilerplate - Client / Host",
 
