@@ -4,3 +4,16 @@
     text-align: center;
     font: 30px/300px Helvetica, Arial, sans-serif;
 }
+
+button {
+    width: 100px;
+    height: 40px;
+    border-color: #940104;
+    background-color: #e53325;
+    color: white;
+}
+
+button.ready {
+    border-color: #679403;
+    background-color: #bfd70e;
+}

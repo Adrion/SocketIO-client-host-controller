@@ -1,10 +1,29 @@
-#mainCanvas{
-  border: 1px solid black;
-  margin: auto;
+div.status {
+  border-radius:50%;
+  width:20px;
+  height:20px;
+  display: inline-block;
+  margin-right: 5px;
 }
 
-#wrapper{
-  margin: auto;
-  text-align: center;
-  width: 100%;
+.checked {
+  border:2px solid #679403;
+  background:#bfd70e;
+}
+.unchecked {
+  border:2px solid #940104;
+  background: #e53325;
+}
+
+button {
+  width: 100px;
+  height: 40px;
+  border-color: #679403;
+  background-color: #bfd70e;
+  color: white;
+}
+
+button:disabled {
+  border-color: #940104;
+  background-color: #e53325;
 }

@@ -76,10 +76,10 @@ function manualPlayerListUpdate() {
   for (var key in players) {
     if (players.hasOwnProperty(key)) {
       var player = players[key];
-      var checked = player.ready ? 'checked' : false;
+      var checked = player.ready ? 'checked' : 'unchecked';
       console.log(checked);
-      playerList += '<id="player.id"><input type="checkbox" disabled ' +
-      checked + ' >' + player.id + '</p>' +
+      playerList += '<p id="player.id"><div class="status ' +
+      checked + '" > </div>' + player.id + '</p>' +
       '<p>Score : ' + player.counter + '</p>';
     }
   }

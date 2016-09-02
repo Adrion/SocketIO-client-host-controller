@@ -7,8 +7,10 @@ function toggleReady() {
   socket.emit('update ready state', { ready: ready}, function() {
     if (ready) {
       $('#ready').html('Ready !');
+      $('#ready').addClass('ready');
     } else {
       $('#ready').html('Ready ?');
+      $('#ready').removeClass('ready');
     }
   });
 }
