@@ -1,7 +1,7 @@
 {
-  "name": "SocketIO-mobile-controller",
+  "name": "SocketIO-client-host-controller",
   "version": "1.0.0",
-  "description": "Node.js server that uses socket.io to maintain a connection between a desktop (or other instance) client, and multiple mobile controllers.",
+  "description": "Node.js multiplayer server engine - Client / Host",
   "main": "app.js",
   "dependencies": {
     "express": "~4.13.1",
